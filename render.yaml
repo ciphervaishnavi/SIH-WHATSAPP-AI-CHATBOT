@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: sih-health-chatbot
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: TWILIO_ACCOUNT_SID
+        value: ACe8a3412c41a2243b86d504b61dd13249
+      - key: TWILIO_AUTH_TOKEN
+        value: 6f207ddb561dd3efbd8c860ccd186107
+      - key: TWILIO_WHATSAPP_NUMBER
+        value: whatsapp:+14155238886
+      - key: HUGGINGFACE_API_KEY
+        value: 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
+      - key: PORT
+        value: 10000
