@@ -1,0 +1,10 @@
+{
+  "name": "sih-chatbot",
+  "version": "1.0.0",
+  "description": "Multilingual WhatsApp Health Chatbot with AI assistance",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/sih-chatbot.git"
+  },
+  "heroku-postbuild": "npm install"
+}

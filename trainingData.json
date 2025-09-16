@@ -1,0 +1,60 @@
+{
+  "conversations": [
+    {
+      "input": "what are fever symptoms",
+      "output": "Fever symptoms include body temperature above 100.4°F (38°C), chills, sweating, headache, muscle aches, and feeling weak. Drink fluids and rest. See a doctor if fever exceeds 103°F or lasts more than 3 days.",
+      "language": "en",
+      "timestamp": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "input": "बुखार के लक्षण क्या हैं",
+      "output": "बुखार के लक्षणों में शरीर का तापमान 100.4°F (38°C) से अधिक होना, कंपकंपी, पसीना, सिरदर्द, मांसपेशियों में दर्द और कमजोरी महसूस करना शामिल है। तरल पदार्थ पिएं और आराम करें। यदि बुखार 103°F से अधिक हो या 3 दिन से अधिक रहे तो डॉक्टर से मिलें।",
+      "language": "hi",
+      "timestamp": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "input": "ଜ୍ୱର ର ଲକ୍ଷଣ କଣ",
+      "output": "ଜ୍ୱରର ଲକ୍ଷଣଗୁଡ଼ିକରେ ଶରୀରର ତାପମାତ୍ରା 100.4°F (38°C) ରୁ ଅଧିକ, କମ୍ପନ, ଘାମ, ମୁଣ୍ଡବ୍ୟଥା, ମାଂସପେଶୀ ଯନ୍ତ୍ରଣା ଏବଂ ଦୁର୍ବଳତା ଅନୁଭବ କରିବା ଅନ୍ତର୍ଭୁକ୍ତ। ପାଣି ପିଅନ୍ତୁ ଏବଂ ବିଶ୍ରାମ ନିଅନ୍ତୁ। ଯଦି ଜ୍ୱର 103°F ରୁ ଅଧିକ ହୁଏ କିମ୍ବା 3 ଦିନରୁ ଅଧିକ ରହେ ତେବେ ଡାକ୍ତରଙ୍କୁ ଦେଖାନ୍ତୁ।",
+      "language": "or",
+      "timestamp": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "input": "how to prevent cold",
+      "output": "To prevent cold: wash hands frequently, avoid touching face, maintain distance from sick people, get enough sleep, eat healthy foods, exercise regularly, and stay hydrated. Consider vitamin C supplements during cold season.",
+      "language": "en",
+      "timestamp": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "input": "सर्दी से कैसे बचें",
+      "output": "सर्दी से बचने के लिए: बार-बार हाथ धोएं, चेहरा छूने से बचें, बीमार लोगों से दूरी बनाए रखें, पर्याप्त नींद लें, स्वस्थ भोजन खाएं, नियमित व्यायाम करें, और हाइड्रेटेड रहें। सर्दी के मौसम में विटामिन सी सप्लीमेंट लेने पर विचार करें।",
+      "language": "hi",
+      "timestamp": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "input": "ଥଣ୍ଡା ରୁ କିପରି ବଞ୍ଚିବେ",
+      "output": "ଥଣ୍ଡାରୁ ବଞ୍ଚିବା ପାଇଁ: ବାରମ୍ବାର ହାତ ଧୋଇବା, ମୁହଁ ଛୁଇଁବାରୁ ବିରତ ରହିବା, ଅସୁସ୍ଥ ଲୋକଙ୍କଠାରୁ ଦୂରତା ବଜାୟ ରଖିବା, ପର୍ଯ୍ୟାପ୍ତ ନିଦ୍ରା ନେବା, ସୁସ୍ଥ ଖାଦ୍ୟ ଖାଇବା, ନିୟମିତ ବ୍ୟାୟାମ କରିବା, ଏବଂ ହାଇଡ୍ରେଟେଡ୍ ରହିବା। ଶୀତ ଋତୁରେ ଭିଟାମିନ୍ ସି ସପ୍ଲିମେଣ୍ଟ ନେବାକୁ ଚିନ୍ତା କରନ୍ତୁ।",
+      "language": "or",
+      "timestamp": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "input": "headache remedies",
+      "output": "For headache relief: rest in a quiet, dark room, apply cold or warm compress to head/neck, stay hydrated, try gentle neck stretches, avoid loud noises. Take over-the-counter pain relief if needed. See a doctor for severe or persistent headaches.",
+      "language": "en",
+      "timestamp": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "input": "सिरदर्द के उपाय",
+      "output": "सिरदर्द के लिए राहत: शांत, अंधेरे कमरे में आराम करें, सिर/गर्दन पर ठंडी या गर्म सिकाई करें, हाइड्रेटेड रहें, गर्दन की हल्की स्ट्रेचिंग करें, तेज आवाज से बचें। जरूरत पड़ने पर दर्द निवारक दवा लें। गंभीर या लगातार सिरदर्द के लिए डॉक्टर से मिलें।",
+      "language": "hi",
+      "timestamp": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "lastTrained": "2024-01-01T00:00:00.000Z",
+  "trainingNotes": [
+    "This file contains training examples for the health chatbot LLM",
+    "Add new conversations here to improve bot responses",
+    "Each conversation should include input, output, language, and timestamp",
+    "Supported languages: en (English), hi (Hindi), or (Oriya)",
+    "Focus on basic health topics, symptoms, and general wellness advice"
+  ]
+}
