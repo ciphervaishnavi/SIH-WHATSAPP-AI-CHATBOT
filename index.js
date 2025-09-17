@@ -226,6 +226,12 @@ app.get('/webhook', (req, res) => {
     
     console.log('🔍 Webhook verification request received:', { mode, token, challenge });
     console.log('🔑 Expected verify token:', process.env.FACEBOOK_VERIFY_TOKEN);
+    console.log('🔍 All env vars present:', {
+        hasAccessToken: !!process.env.FACEBOOK_ACCESS_TOKEN,
+        hasPhoneId: !!process.env.FACEBOOK_PHONE_NUMBER_ID,
+        hasVerifyToken: !!process.env.FACEBOOK_VERIFY_TOKEN,
+        hasAppSecret: !!process.env.FACEBOOK_APP_SECRET
+    });
     
     // Direct verification without service dependency
     if (mode === 'subscribe' && token === process.env.FACEBOOK_VERIFY_TOKEN) {
@@ -233,6 +239,12 @@ app.get('/webhook', (req, res) => {
         res.status(200).send(challenge);
     } else {
         console.log('❌ Webhook verification failed - token mismatch');
+        console.log('❌ Debug info:', {
+            modeCheck: mode === 'subscribe',
+            tokenCheck: token === process.env.FACEBOOK_VERIFY_TOKEN,
+            receivedToken: token,
+            expectedToken: process.env.FACEBOOK_VERIFY_TOKEN
+        });
         res.status(403).send('Verification failed');
     }
 });
@@ -375,6 +387,20 @@ app.get('/', (req, res) => {
         <hr>
         <p><small>Webhook endpoint: /webhook</small></p>
     `);
+});
+
+// Debug endpoint to check environment variables (remove in production)
+app.get('/debug-env', (req, res) => {
+    res.json({
+        hasAccessToken: !!process.env.FACEBOOK_ACCESS_TOKEN,
+        hasPhoneId: !!process.env.FACEBOOK_PHONE_NUMBER_ID,
+        hasVerifyToken: !!process.env.FACEBOOK_VERIFY_TOKEN,
+        hasAppSecret: !!process.env.FACEBOOK_APP_SECRET,
+        hasGoogleKey: !!process.env.GOOGLE_LLM_API_KEY,
+        nodeEnv: process.env.NODE_ENV,
+        port: process.env.PORT,
+        verifyTokenPreview: process.env.FACEBOOK_VERIFY_TOKEN ? process.env.FACEBOOK_VERIFY_TOKEN.substring(0, 5) + '...' : 'undefined'
+    });
 });
 
 // Schedule daily alerts at 9:00 AM IST (UTC+5:30)
