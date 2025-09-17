@@ -224,13 +224,15 @@ app.get('/webhook', (req, res) => {
     const token = req.query['hub.verify_token'];
     const challenge = req.query['hub.challenge'];
     
-    console.log('🔍 Webhook verification request received');
+    console.log('🔍 Webhook verification request received:', { mode, token, challenge });
+    console.log('🔑 Expected verify token:', process.env.FACEBOOK_VERIFY_TOKEN);
     
-    const verificationResult = facebookService.verifyWebhook(mode, token, challenge);
-    
-    if (verificationResult) {
+    // Direct verification without service dependency
+    if (mode === 'subscribe' && token === process.env.FACEBOOK_VERIFY_TOKEN) {
+        console.log('✅ Webhook verified successfully');
         res.status(200).send(challenge);
     } else {
+        console.log('❌ Webhook verification failed - token mismatch');
         res.status(403).send('Verification failed');
     }
 });
