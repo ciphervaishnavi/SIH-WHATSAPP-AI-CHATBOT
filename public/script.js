@@ -64,13 +64,19 @@ function setupFormHandlers() {
 
 // Modal functions
 function openModal(modalId) {
-    document.getElementById(modalId).style.display = 'block';
-    document.body.style.overflow = 'hidden';
+    const modal = document.getElementById(modalId);
+    modal.style.display = 'block';
+    // Don't disable body scrolling, let modal handle its own scrolling
+    setTimeout(() => {
+        const modalContent = modal.querySelector('.modal-content');
+        if (modalContent) {
+            modalContent.scrollTop = 0;
+        }
+    }, 100);
 }
 
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
-    document.body.style.overflow = 'auto';
 }
 
 function openRegisterModal() {
@@ -90,7 +96,6 @@ function openDashboardModal() {
 window.onclick = function(event) {
     if (event.target.classList.contains('modal')) {
         event.target.style.display = 'none';
-        document.body.style.overflow = 'auto';
     }
 }
 
