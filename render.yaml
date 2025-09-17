@@ -14,5 +14,7 @@ services:
         value: whatsapp:+14155238886
       - key: HUGGINGFACE_API_KEY
         value: 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
+      - key: GOOGLE_LLM_API_KEY
+        value: YOUR_GOOGLE_API_KEY_HERE
       - key: PORT
         value: 10000

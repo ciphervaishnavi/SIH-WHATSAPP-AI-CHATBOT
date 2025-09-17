@@ -9,8 +9,9 @@ const schedule = require('node-schedule');
 const fs = require('fs');
 const path = require('path');
 
-// Import LLM service for advanced responses
+// Import LLM services for advanced responses
 const SimpleHealthLLM = require('./llmService');
+const googleLLMService = require('./googleLLMService');
 
 // Load environment variables from .env file if it exists
 try {
@@ -264,17 +265,35 @@ app.post('/webhook', async (req, res) => {
         let responseMessage = findHealthResponse(userMessage, detectedLanguage);
         let usedLLM = false;
         
-        // If no JSON match found, try LLM
-        if (!responseMessage && llmService) {
-            console.log('🤖 No JSON match found, trying LLM...');
+        // If no JSON match found, try Google LLM first, then fallback LLM
+        if (!responseMessage) {
+            console.log('🤖 No JSON match found, trying Google LLM...');
+            
+            // Try Google LLM first (most robust)
             try {
-                responseMessage = await llmService.generateResponse(userMessage, detectedLanguage);
-                if (responseMessage) {
-                    usedLLM = true;
-                    console.log('✅ LLM generated response');
+                if (googleLLMService.isAvailable()) {
+                    responseMessage = await googleLLMService.getHealthResponse(userMessage, detectedLanguage);
+                    if (responseMessage) {
+                        usedLLM = true;
+                        console.log('✅ Google LLM generated response');
+                    }
                 }
             } catch (error) {
-                console.error('❌ LLM error:', error.message);
+                console.error('❌ Google LLM error:', error.message);
+            }
+            
+            // Fallback to Hugging Face LLM if Google LLM failed
+            if (!responseMessage && llmService) {
+                console.log('🤖 Trying Hugging Face LLM fallback...');
+                try {
+                    responseMessage = await llmService.generateResponse(userMessage, detectedLanguage);
+                    if (responseMessage) {
+                        usedLLM = true;
+                        console.log('✅ Hugging Face LLM generated response');
+                    }
+                } catch (error) {
+                    console.error('❌ Hugging Face LLM error:', error.message);
+                }
             }
         }
         

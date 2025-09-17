@@ -5,13 +5,14 @@ A simple WhatsApp chatbot built with Node.js and Twilio that educates users on b
 ## 🌟 Features
 
 - **Health Q&A**: Responds to 10+ common health questions (flu, dengue, malaria, diabetes, vaccines, etc.)
-- **AI-Powered Responses**: Uses Hugging Face LLM for intelligent health advice when JSON doesn't match
-- **Trilingual Support**: English, Hindi, and Oriya languages
-- **Simple Training**: Add new Q&A pairs by editing JSON files
-- **Adaptive Learning**: Bot learns from interactions and improves over time
+- **Advanced Google LLM**: Uses Google's trained AI model for intelligent, accurate health responses in all languages
+- **Multi-LLM Architecture**: Google LLM primary + Hugging Face LLM fallback for maximum reliability
+- **Trilingual Support**: English, Hindi, and Oriya languages with native AI responses
+- **Smart Training**: JSON knowledge base + AI learning for comprehensive health coverage
+- **Robust Response System**: Always provides helpful answers, even for complex or unusual questions
 - **Daily Alerts**: Sends health outbreak alerts at 9 AM IST daily
 - **WhatsApp Integration**: Works directly through WhatsApp via Twilio
-- **Beginner Friendly**: Clean, commented code that's easy to understand
+- **Production Ready**: Deployed and tested with multiple AI fallback layers
 
 ## 📋 Health Topics Covered
 
@@ -82,13 +83,20 @@ TWILIO_ACCOUNT_SID=your_account_sid_here
 TWILIO_AUTH_TOKEN=your_auth_token_here
 TWILIO_WHATSAPP_NUMBER=whatsapp:+14155238886
 
-# Optional: For enhanced AI responses (get free at https://huggingface.co/settings/tokens)
+# Optional AI Keys (for enhanced responses)
+# Google LLM API (recommended - get at https://ai.google.dev/gemini-api/docs/api-key)
+GOOGLE_LLM_API_KEY=your_google_api_key_here
+
+# Hugging Face API (fallback - get at https://huggingface.co/settings/tokens)
 HUGGINGFACE_API_KEY=your_huggingface_api_key_here
 
 PORT=3000
 ```
 
-**Note:** The `HUGGINGFACE_API_KEY` is optional. Without it, the bot uses the free tier with limited requests. The bot will still work perfectly with JSON responses.
+**🚀 AI Enhancement:**
+- **Google LLM API Key** (recommended): Provides the most robust, accurate health responses in all languages
+- **Hugging Face API Key** (optional): Serves as backup AI when Google LLM is unavailable
+- **Without AI keys**: Bot still works perfectly using the JSON knowledge base
 
 ### 4. Test Locally
 
