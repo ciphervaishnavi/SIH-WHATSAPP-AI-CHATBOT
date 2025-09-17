@@ -18,7 +18,16 @@ class GoogleLLMService {
             }
 
             this.genAI = new GoogleGenerativeAI(apiKey);
-            this.model = this.genAI.getGenerativeModel({ model: "gemini-pro" });
+            // Initialize the model
+        this.model = this.genAI.getGenerativeModel({ 
+            model: "gemini-1.5-flash",
+            generationConfig: {
+                temperature: 0.7,
+                topP: 0.8,
+                topK: 40,
+                maxOutputTokens: 150,
+            },
+        });
             this.isInitialized = true;
             console.log('✅ Google LLM service initialized successfully');
         } catch (error) {
