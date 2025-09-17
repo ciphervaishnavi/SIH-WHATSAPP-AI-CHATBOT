@@ -403,6 +403,36 @@ app.get('/debug-env', (req, res) => {
     });
 });
 
+// Test endpoint to check message sending capability
+app.get('/test-message/:phoneNumber', async (req, res) => {
+    try {
+        const phoneNumber = req.params.phoneNumber;
+        const testMessage = `🤖 Test message from your health chatbot!\n\n✅ Bot is working correctly\n📱 Time: ${new Date().toISOString()}\n🔧 This is a test - you can delete this message`;
+        
+        console.log(`📤 Sending test message to ${phoneNumber}`);
+        
+        if (!facebookService || !facebookService.isConfigured()) {
+            return res.status(500).json({ error: 'Facebook service not configured' });
+        }
+        
+        const result = await facebookService.sendMessage(phoneNumber, testMessage);
+        
+        res.json({
+            success: true,
+            message: 'Test message sent successfully',
+            result: result,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        console.error('❌ Test message failed:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message,
+            timestamp: new Date().toISOString()
+        });
+    }
+});
+
 // Schedule daily alerts at 9:00 AM IST (UTC+5:30)
 // Cron format: second minute hour day-of-month month day-of-week
 const alertJob = schedule.scheduleJob('0 0 9 * * *', () => {
