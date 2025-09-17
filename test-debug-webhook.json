@@ -1,0 +1,39 @@
+{
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "123456789",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "15551461259",
+              "phone_number_id": "770231682842300"
+            },
+            "messages": [
+              {
+                "from": "919376308345",
+                "id": "debug_msg_123",
+                "timestamp": "1694952000",
+                "text": {
+                  "body": "diabetes"
+                },
+                "type": "text"
+              }
+            ],
+            "contacts": [
+              {
+                "profile": {
+                  "name": "Test User"
+                },
+                "wa_id": "919376308345"
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}

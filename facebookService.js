@@ -90,16 +90,23 @@ class FacebookWhatsAppService {
         }
 
         try {
+            // Ensure phone number format is correct (no + prefix for Facebook API)
+            const cleanTo = to.replace(/^\+/, '');
+            
             const url = `${this.baseUrl}/${this.phoneNumberId}/messages`;
             
             const payload = {
                 messaging_product: 'whatsapp',
-                to: to,
+                to: cleanTo,
                 type: 'text',
                 text: {
                     body: message
                 }
             };
+
+            console.log(`📤 Sending message to ${cleanTo}:`, message.substring(0, 50) + '...');
+            console.log(`📤 Using phone number ID: ${this.phoneNumberId}`);
+            console.log(`📤 Using URL: ${url}`);
 
             const response = await axios.post(url, payload, {
                 headers: {
@@ -109,10 +116,12 @@ class FacebookWhatsAppService {
             });
 
             if (response.status === 200) {
-                console.log(`✅ Message sent successfully to ${to}`);
+                console.log(`✅ Message sent successfully to ${cleanTo}`);
+                console.log(`✅ Response:`, response.data);
                 return true;
             } else {
                 console.log(`❌ Failed to send message. Status: ${response.status}`);
+                console.log(`❌ Response:`, response.data);
                 return false;
             }
 
