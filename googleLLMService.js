@@ -78,6 +78,7 @@ Trained Response:`;
         const healthResponses = {
             'en': {
                 'headache': 'Common headache causes include stress, dehydration, lack of sleep, or eye strain. Try rest, hydration, and gentle massage. Consult a doctor if severe or persistent.',
+                'migraine': 'Migraines cause severe throbbing headaches, often with nausea, light sensitivity, and visual disturbances. Triggers include stress, certain foods, and hormonal changes. See a doctor for proper diagnosis and treatment.',
                 'fever': 'Fever is often a sign of infection. Rest, drink fluids, and use fever reducers if needed. See a doctor if fever exceeds 103°F (39.4°C) or lasts more than 3 days.',
                 'cough': 'Cough can be due to cold, allergies, or irritation. Stay hydrated, use honey, and avoid irritants. Consult a doctor if persistent or with blood.',
                 'stomach': 'Stomach pain can have many causes. Try bland foods, stay hydrated, and rest. See a doctor if severe, persistent, or with other concerning symptoms.',
@@ -87,6 +88,7 @@ Trained Response:`;
             },
             'hi': {
                 'headache': 'सिरदर्द के सामान्य कारणों में तनाव, निर्जलीकरण, नींद की कमी या आंखों का तनाव शामिल है। आराम, पानी पीना और हल्की मालिश करें। गंभीर या लगातार होने पर डॉक्टर से मिलें।',
+                'migraine': 'माइग्रेन में तेज़ धड़कता हुआ सिरदर्द होता है, अक्सर मतली, प्रकाश संवेदनशीलता और दृश्य बाधाओं के साथ। कारणों में तनाव, कुछ खाद्य पदार्थ और हार्मोनल बदलाव शामिल हैं। उचित निदान और उपचार के लिए डॉक्टर से मिलें।',
                 'fever': 'बुखार अक्सर संक्रमण का संकेत है। आराम करें, तरल पदार्थ पीएं और जरूरत पड़ने पर बुखार कम करने वाली दवा लें। 103°F से अधिक या 3 दिन से ज्यादा रहने पर डॉक्टर को दिखाएं।',
                 'cough': 'खांसी सर्दी, एलर्जी या जलन के कारण हो सकती है। पानी पीते रहें, शहद का उपयोग करें और परेशान करने वाली चीजों से बचें। लगातार या खून के साथ होने पर डॉक्टर से मिलें।',
                 'stomach': 'पेट दर्द के कई कारण हो सकते हैं। हल्का भोजन लें, पानी पीते रहें और आराम करें। गंभीर, लगातार या अन्य चिंताजनक लक्षणों के साथ होने पर डॉक्टर को दिखाएं।',
@@ -96,6 +98,7 @@ Trained Response:`;
             },
             'or': {
                 'headache': 'ମୁଣ୍ଡବିନ୍ଧାର ସାଧାରଣ କାରଣରେ ଚାପ, ପାଣି ଅଭାବ, ନିଦ ଅଭାବ କିମ୍ବା ଆଖି ଚାପ ଅନ୍ତର୍ଭୁକ୍ତ। ବିଶ୍ରାମ, ପାଣି ପିଇବା ଏବଂ ହାଲକା ମାଲିସ କରନ୍ତୁ। ଗମ୍ଭୀର କିମ୍ବା ନିରନ୍ତର ହେଲେ ଡାକ୍ତରଙ୍କ ସହିତ ମିଳନ୍ତୁ।',
+                'migraine': 'ମାଇଗ୍ରେନରେ ପ୍ରବଳ ଧଡ଼ଫଡ଼ାଉଥିବା ମୁଣ୍ଡବିନ୍ଧା ହୁଏ, ପ୍ରାୟତଃ ବାନ୍ତି, ଆଲୋକ ସମ୍ବେଦନଶୀଳତା ଏବଂ ଦୃଶ୍ୟ ବାଧା ସହିତ। କାରଣରେ ଚାପ, କିଛି ଖାଦ୍ୟ ଏବଂ ହରମୋନାଲ ପରିବର୍ତ୍ତନ ଅନ୍ତର୍ଭୁକ୍ତ। ସଠିକ୍ ନିଦାନ ଏବଂ ଚିକିତ୍ସା ପାଇଁ ଡାକ୍ତରଙ୍କ ସହିତ ମିଳନ୍ତୁ।',
                 'fever': 'ଜ୍ୱର ପ୍ରାୟତଃ ସଂକ୍ରମଣର ସଙ୍କେତ। ବିଶ୍ରାମ କରନ୍ତୁ, ତରଳ ପଦାର୍ଥ ପିଅନ୍ତୁ ଏବଂ ଆବଶ୍ୟକ ହେଲେ ଜ୍ୱର କମାଇବା ଔଷଧ ନିଅନ୍ତୁ। 103°F ରୁ ଅଧିକ କିମ୍ବା 3 ଦିନରୁ ଅଧିକ ରହିଲେ ଡାକ୍ତରଙ୍କୁ ଦେଖାନ୍ତୁ।',
                 'cough': 'କାଶ ଥଣ୍ଡା, ଆଲର୍ଜି କିମ୍ବା ଜଳନ କାରଣରୁ ହୋଇପାରେ। ପାଣି ପିଇବା ଜାରି ରଖନ୍ତୁ, ମହୁ ବ୍ୟବହାର କରନ୍ତୁ ଏବଂ ଜ୍ୱାଲାମୟ ଜିନିଷରୁ ଦୂରେ ରୁହନ୍ତୁ। ନିରନ୍ତର କିମ୍ବା ରକ୍ତ ସହିତ ହେଲେ ଡାକ୍ତରଙ୍କ ସହିତ ମିଳନ୍ତୁ।',
                 'stomach': 'ପେଟ ଯନ୍ତ୍ରଣାର ଅନେକ କାରଣ ହୋଇପାରେ। ହାଲୁକା ଖାଦ୍ୟ ଖାଆନ୍ତୁ, ପାଣି ପିଇବା ଜାରି ରଖନ୍ତୁ ଏବଂ ବିଶ୍ରାମ କରନ୍ତୁ। ଗମ୍ଭୀର, ନିରନ୍ତର କିମ୍ବା ଅନ୍ୟ ଚିନ୍ତାଜନକ ଲକ୍ଷଣ ସହିତ ହେଲେ ଡାକ୍ତରଙ୍କୁ ଦେଖାନ୍ତୁ।',

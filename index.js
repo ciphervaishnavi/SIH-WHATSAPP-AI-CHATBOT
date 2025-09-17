@@ -9,16 +9,16 @@ const schedule = require('node-schedule');
 const fs = require('fs');
 const path = require('path');
 
-// Import LLM services for advanced responses
-const SimpleHealthLLM = require('./llmService');
-const googleLLMService = require('./googleLLMService');
-
-// Load environment variables from .env file if it exists
+// Load environment variables from .env file FIRST
 try {
     require('dotenv').config();
 } catch (error) {
     console.log('dotenv not found, using environment variables directly');
 }
+
+// Import LLM services for advanced responses (after env vars loaded)
+const SimpleHealthLLM = require('./llmService');
+const googleLLMService = require('./googleLLMService');
 
 // Initialize Express app
 const app = express();
