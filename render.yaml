@@ -6,15 +6,17 @@ services:
     buildCommand: npm install
     startCommand: npm start
     envVars:
-      - key: TWILIO_ACCOUNT_SID
-        value: ACe8a3412c41a2243b86d504b61dd13249
-      - key: TWILIO_AUTH_TOKEN
-        value: 6f207ddb561dd3efbd8c860ccd186107
-      - key: TWILIO_WHATSAPP_NUMBER
-        value: whatsapp:+14155238886
-      - key: HUGGINGFACE_API_KEY
-        value: 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
+      - key: FACEBOOK_ACCESS_TOKEN
+        value: YOUR_FACEBOOK_ACCESS_TOKEN_HERE
+      - key: FACEBOOK_PHONE_NUMBER_ID
+        value: YOUR_PHONE_NUMBER_ID_HERE
+      - key: FACEBOOK_VERIFY_TOKEN
+        value: YOUR_VERIFY_TOKEN_HERE
+      - key: FACEBOOK_APP_SECRET
+        value: YOUR_APP_SECRET_HERE
       - key: GOOGLE_LLM_API_KEY
         value: YOUR_GOOGLE_API_KEY_HERE
+      - key: HUGGINGFACE_API_KEY
+        value: YOUR_HUGGINGFACE_API_KEY_HERE
       - key: PORT
         value: 10000

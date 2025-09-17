@@ -1,10 +1,9 @@
-// WhatsApp Health Chatbot using Node.js and Twilio
+// WhatsApp Health Chatbot using Node.js and Facebook Business API
 // This chatbot educates users on health topics and sends outbreak alerts
 
 // Import required packages
 const express = require('express');
 const bodyParser = require('body-parser');
-const twilio = require('twilio');
 const schedule = require('node-schedule');
 const fs = require('fs');
 const path = require('path');
@@ -19,35 +18,30 @@ try {
 // Import LLM services for advanced responses (after env vars loaded)
 const SimpleHealthLLM = require('./llmService');
 const googleLLMService = require('./googleLLMService');
+const FacebookWhatsAppService = require('./facebookService');
 
 // Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Twilio configuration - these should be set as environment variables
-const accountSid = process.env.TWILIO_ACCOUNT_SID || 'your_account_sid';
-const authToken = process.env.TWILIO_AUTH_TOKEN || 'your_auth_token';
-
-// Initialize Twilio client with error handling
-let client;
+// Initialize Facebook WhatsApp Business service
+let facebookService;
 try {
-    if (accountSid.startsWith('AC') && authToken.length > 10) {
-        client = twilio(accountSid, authToken);
-        console.log('✅ Twilio client initialized successfully');
+    facebookService = new FacebookWhatsAppService();
+    if (facebookService.isConfigured()) {
+        console.log('✅ Facebook WhatsApp Business service initialized successfully');
     } else {
-        console.log('⚠️ Twilio credentials not configured properly. Bot will run in demo mode.');
-        console.log('📝 Please set TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN in your .env file');
+        console.log('⚠️ Facebook WhatsApp credentials not configured. Bot will run in demo mode.');
+        console.log('📝 Please set Facebook credentials in your .env file');
     }
 } catch (error) {
-    console.error('❌ Error initializing Twilio client:', error.message);
+    console.error('❌ Error initializing Facebook service:', error.message);
     console.log('📝 Bot will run in demo mode without WhatsApp integration');
 }
 
-// WhatsApp phone number from Twilio (format: whatsapp:+14155238886)
-const twilioWhatsAppNumber = process.env.TWILIO_WHATSAPP_NUMBER || 'whatsapp:+14155238886';
-
 // Middleware to parse incoming webhook data
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(bodyParser.json());
 
 // Store user phone numbers for daily alerts
@@ -139,32 +133,27 @@ function getDefaultResponse(language) {
 }
 
 /**
- * Function to send WhatsApp message using Twilio
+ * Function to send WhatsApp message using Facebook Business API
  * @param {string} to - Recipient's WhatsApp number
  * @param {string} message - Message to send
  */
 async function sendWhatsAppMessage(to, message) {
     try {
-        if (!client) {
+        if (!facebookService || !facebookService.isConfigured()) {
             console.log('🤖 Demo Mode - Would send message:', message.substring(0, 100) + '...');
-            return { sid: 'demo_message_id' };
+            return true;
         }
         
-        // Ensure proper WhatsApp number formatting
-        const formattedTo = to.startsWith('whatsapp:') ? to : `whatsapp:${to}`;
-        
-        const result = await client.messages.create({
-            body: message,
-            from: twilioWhatsAppNumber,
-            to: formattedTo
-        });
-        console.log(`📱 Message sent to ${formattedTo}: ${result.sid}`);
+        const result = await facebookService.sendMessage(to, message);
+        if (result) {
+            console.log(`📱 Message sent successfully to ${to}`);
+        }
         return result;
     } catch (error) {
         console.error(`❌ Error sending message to ${to}:`, error.message);
         // Don't throw error in webhook context, just log it
         console.log('⚠️ Continuing webhook processing despite send error...');
-        return null;
+        return false;
     }
 }
 
@@ -229,40 +218,72 @@ app.post('/test', (req, res) => {
     });
 });
 
+// Webhook verification endpoint (required by Facebook)
+app.get('/webhook', (req, res) => {
+    const mode = req.query['hub.mode'];
+    const token = req.query['hub.verify_token'];
+    const challenge = req.query['hub.challenge'];
+    
+    console.log('🔍 Webhook verification request received');
+    
+    const verificationResult = facebookService.verifyWebhook(mode, token, challenge);
+    
+    if (verificationResult) {
+        res.status(200).send(challenge);
+    } else {
+        res.status(403).send('Verification failed');
+    }
+});
+
 // Main webhook endpoint for WhatsApp messages
 app.post('/webhook', async (req, res) => {
     try {
-        console.log('\n� ===== WEBHOOK RECEIVED =====');
+        console.log('\n📨 ===== WEBHOOK RECEIVED =====');
         console.log('📥 Full request body:', JSON.stringify(req.body, null, 2));
         console.log('📥 Headers:', JSON.stringify(req.headers, null, 2));
         console.log('===============================\n');
         
-        // Extract message details from Twilio webhook
-        const userMessage = req.body.Body || '';
-        const userNumber = req.body.From || '';
-        const twilioNumber = req.body.To || '';
-        
-        console.log('📨 Extracted data:');
-        console.log(`   Message: "${userMessage}"`);
-        console.log(`   From: ${userNumber}`);
-        console.log(`   To: ${twilioNumber}`);
-        
-        // Validate required fields
-        if (!userMessage || !userNumber) {
-            console.log('⚠️ Missing required fields in webhook');
-            return res.status(400).send('Missing required fields');
+        // Verify webhook signature for security
+        const signature = req.headers['x-hub-signature-256'];
+        if (!facebookService.verifyWebhookSignature(JSON.stringify(req.body), signature)) {
+            console.log('❌ Webhook signature verification failed');
+            return res.status(403).send('Unauthorized');
         }
         
+        // Parse Facebook webhook message
+        const messageData = facebookService.parseWebhookMessage(req.body);
+        
+        if (!messageData) {
+            console.log('⚠️ No message data found in webhook');
+            return res.status(200).send('OK');
+        }
+        
+        const { messageId, from, text, name } = messageData;
+        
+        console.log('📨 Extracted data:');
+        console.log(`   Message: "${text}"`);
+        console.log(`   From: ${from} (${name})`);
+        console.log(`   Message ID: ${messageId}`);
+        
+        // Skip if empty message
+        if (!text || text.trim().length === 0) {
+            console.log('⚠️ Empty message received, skipping');
+            return res.status(200).send('OK');
+        }
+        
+        // Mark message as read
+        await facebookService.markAsRead(messageId);
+        
         // Add user to contacts list for daily alerts
-        userContacts.add(userNumber);
-        console.log(`👤 User ${userNumber} added to alert list (Total: ${userContacts.size})`);
+        userContacts.add(from);
+        console.log(`👤 User ${from} (${name}) added to alert list (Total: ${userContacts.size})`);
         
         // Detect language from user input
-        const detectedLanguage = detectLanguage(userMessage);
+        const detectedLanguage = detectLanguage(text);
         console.log(`🗣️ Detected language: ${detectedLanguage === 'hi' ? 'Hindi' : detectedLanguage === 'or' ? 'Oriya' : 'English'}`);
         
         // Find appropriate health response
-        let responseMessage = findHealthResponse(userMessage, detectedLanguage);
+        let responseMessage = findHealthResponse(text, detectedLanguage);
         let usedLLM = false;
         
         // If no JSON match found, try Google LLM first, then fallback LLM
@@ -272,7 +293,7 @@ app.post('/webhook', async (req, res) => {
             // Try Google LLM first (most robust)
             try {
                 if (googleLLMService.isAvailable()) {
-                    responseMessage = await googleLLMService.getHealthResponse(userMessage, detectedLanguage);
+                    responseMessage = await googleLLMService.getHealthResponse(text, detectedLanguage);
                     if (responseMessage) {
                         usedLLM = true;
                         console.log('✅ Google LLM generated response');
@@ -286,7 +307,7 @@ app.post('/webhook', async (req, res) => {
             if (!responseMessage && llmService) {
                 console.log('🤖 Trying Hugging Face LLM fallback...');
                 try {
-                    responseMessage = await llmService.generateResponse(userMessage, detectedLanguage);
+                    responseMessage = await llmService.generateResponse(text, detectedLanguage);
                     if (responseMessage) {
                         usedLLM = true;
                         console.log('✅ Hugging Face LLM generated response');
@@ -308,13 +329,19 @@ app.post('/webhook', async (req, res) => {
         console.log(`🤖 Bot response: ${responseMessage.substring(0, 150)}...`);
         
         // Send response back to user
-        await sendWhatsAppMessage(userNumber, responseMessage);
+        const messageSent = await facebookService.sendMessage(from, responseMessage);
+        
+        if (messageSent) {
+            console.log(`✅ Response sent successfully to ${name}`);
+        } else {
+            console.log(`❌ Failed to send response to ${name}`);
+        }
         
         // Log the interaction
-        console.log(`💬 Interaction completed successfully`);
+        console.log(`💬 Interaction completed`);
         console.log('=================================\n');
         
-        // Respond to Twilio webhook (required)
+        // Respond to Facebook webhook (required)
         res.status(200).send('OK');
         
     } catch (error) {
@@ -381,14 +408,16 @@ app.listen(PORT, () => {
     console.log(`🚨 Loaded ${healthData.alerts.length} alert messages`);
     console.log('');
     console.log('📝 To test the bot:');
-    console.log('1. Set up Twilio WhatsApp sandbox');
-    console.log('2. Configure webhook URL: https://your-app.herokuapp.com/webhook');
-    console.log('3. Send messages to your Twilio WhatsApp number');
+    console.log('1. Set up Facebook Business WhatsApp API');
+    console.log('2. Configure webhook URL: https://your-app.onrender.com/webhook');
+    console.log('3. Send messages to your business WhatsApp number');
     console.log('');
     console.log('Environment variables needed:');
-    console.log('- TWILIO_ACCOUNT_SID');
-    console.log('- TWILIO_AUTH_TOKEN');
-    console.log('- TWILIO_WHATSAPP_NUMBER');
+    console.log('- FACEBOOK_ACCESS_TOKEN');
+    console.log('- FACEBOOK_PHONE_NUMBER_ID');
+    console.log('- FACEBOOK_VERIFY_TOKEN');
+    console.log('- FACEBOOK_APP_SECRET');
+    console.log('- GOOGLE_LLM_API_KEY (recommended)');
 });
 
 // Export app for testing

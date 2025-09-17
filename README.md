@@ -11,7 +11,7 @@ A simple WhatsApp chatbot built with Node.js and Twilio that educates users on b
 - **Smart Training**: JSON knowledge base + AI learning for comprehensive health coverage
 - **Robust Response System**: Always provides helpful answers, even for complex or unusual questions
 - **Daily Alerts**: Sends health outbreak alerts at 9 AM IST daily
-- **WhatsApp Integration**: Works directly through WhatsApp via Twilio
+- **Facebook Business WhatsApp**: Official WhatsApp Business API (no daily limits!)
 - **Production Ready**: Deployed and tested with multiple AI fallback layers
 
 ## 📋 Health Topics Covered
