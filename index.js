@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 const schedule = require('node-schedule');
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // Load environment variables from .env file FIRST
 try {
@@ -23,6 +25,9 @@ const FacebookWhatsAppService = require('./facebookService');
 // Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// JWT Secret
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-healthbot-2025';
 
 // Initialize Facebook WhatsApp Business service
 let facebookService;
@@ -43,9 +48,50 @@ try {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(bodyParser.json());
+app.use(express.static('public')); // Serve static files from public directory
 
 // Store user phone numbers for daily alerts
 let userContacts = new Set();
+
+// User database helpers
+function loadUsers() {
+    try {
+        const usersPath = path.join(__dirname, 'users.json');
+        const rawData = fs.readFileSync(usersPath);
+        return JSON.parse(rawData);
+    } catch (error) {
+        return { users: [], registeredNumbers: [], userStats: {} };
+    }
+}
+
+function saveUsers(userData) {
+    try {
+        const usersPath = path.join(__dirname, 'users.json');
+        fs.writeFileSync(usersPath, JSON.stringify(userData, null, 2));
+        return true;
+    } catch (error) {
+        console.error('Error saving users:', error);
+        return false;
+    }
+}
+
+// Authentication middleware
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ message: 'Access token required' });
+    }
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ message: 'Invalid or expired token' });
+        }
+        req.user = user;
+        next();
+    });
+}
 
 // Initialize LLM service
 let llmService;
@@ -430,6 +476,274 @@ app.get('/test-message/:phoneNumber', async (req, res) => {
             error: error.message,
             timestamp: new Date().toISOString()
         });
+    }
+});
+
+// =====================================
+// DASHBOARD API ROUTES
+// =====================================
+
+// Serve dashboard home page
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// User registration endpoint
+app.post('/api/register', async (req, res) => {
+    try {
+        const { fullName, email, phone, language, password, terms } = req.body;
+        
+        // Validate required fields
+        if (!fullName || !email || !phone || !language || !password) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+        
+        // Validate terms acceptance
+        if (!terms) {
+            return res.status(400).json({ message: 'You must accept the terms and conditions' });
+        }
+        
+        // Validate phone number format
+        const phoneRegex = /^\+\d{10,15}$/;
+        if (!phoneRegex.test(phone)) {
+            return res.status(400).json({ message: 'Invalid phone number format' });
+        }
+        
+        // Load existing users
+        const userData = loadUsers();
+        
+        // Check if email already exists
+        const existingUser = userData.users.find(user => user.email === email);
+        if (existingUser) {
+            return res.status(400).json({ message: 'Email already registered' });
+        }
+        
+        // Check if phone already exists
+        const existingPhone = userData.users.find(user => user.phone === phone);
+        if (existingPhone) {
+            return res.status(400).json({ message: 'Phone number already registered' });
+        }
+        
+        // Hash password
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        
+        // Create new user
+        const newUser = {
+            id: Date.now().toString(),
+            fullName,
+            email,
+            phone,
+            language,
+            password: hashedPassword,
+            registeredAt: new Date().toISOString(),
+            totalMessages: 0,
+            lastActive: null,
+            settings: {
+                dailyTips: true,
+                emailNotifications: true
+            }
+        };
+        
+        // Add user to database
+        userData.users.push(newUser);
+        userData.registeredNumbers.push(phone);
+        
+        // Save to file
+        if (!saveUsers(userData)) {
+            return res.status(500).json({ message: 'Failed to save user data' });
+        }
+        
+        console.log(`👤 New user registered: ${fullName} (${email})`);
+        
+        res.status(201).json({ 
+            message: 'Registration successful',
+            user: {
+                id: newUser.id,
+                fullName: newUser.fullName,
+                email: newUser.email,
+                phone: newUser.phone,
+                language: newUser.language
+            }
+        });
+        
+    } catch (error) {
+        console.error('Registration error:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+// User login endpoint
+app.post('/api/login', async (req, res) => {
+    try {
+        const { email, password, rememberMe } = req.body;
+        
+        // Validate required fields
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Email and password are required' });
+        }
+        
+        // Load users
+        const userData = loadUsers();
+        
+        // Find user by email
+        const user = userData.users.find(u => u.email === email);
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
+        
+        // Verify password
+        const isValidPassword = await bcrypt.compare(password, user.password);
+        if (!isValidPassword) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
+        
+        // Update last active
+        user.lastActive = new Date().toISOString();
+        saveUsers(userData);
+        
+        // Generate JWT token
+        const tokenExpiry = rememberMe ? '30d' : '24h';
+        const token = jwt.sign(
+            { id: user.id, email: user.email }, 
+            JWT_SECRET, 
+            { expiresIn: tokenExpiry }
+        );
+        
+        console.log(`🔑 User logged in: ${user.fullName} (${user.email})`);
+        
+        res.json({
+            message: 'Login successful',
+            token,
+            user: {
+                id: user.id,
+                fullName: user.fullName,
+                email: user.email,
+                phone: user.phone,
+                language: user.language,
+                totalMessages: user.totalMessages,
+                lastActive: user.lastActive,
+                settings: user.settings
+            }
+        });
+        
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+// Register for WhatsApp chat
+app.post('/api/register-whatsapp', authenticateToken, (req, res) => {
+    try {
+        const { phone, language } = req.body;
+        const userId = req.user.id;
+        
+        // Load users
+        const userData = loadUsers();
+        const user = userData.users.find(u => u.id === userId);
+        
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        
+        // Add to registered numbers if not already present
+        if (!userData.registeredNumbers.includes(phone)) {
+            userData.registeredNumbers.push(phone);
+        }
+        
+        // Add to alert contacts
+        userContacts.add(phone);
+        
+        // Update user stats
+        if (!userData.userStats[userId]) {
+            userData.userStats[userId] = {
+                whatsappRegistered: true,
+                registeredAt: new Date().toISOString()
+            };
+        }
+        
+        saveUsers(userData);
+        
+        console.log(`📱 WhatsApp registration: ${user.fullName} (${phone})`);
+        
+        res.json({ 
+            message: 'Successfully registered for WhatsApp chat',
+            whatsappNumber: process.env.FACEBOOK_PHONE_NUMBER_ID 
+        });
+        
+    } catch (error) {
+        console.error('WhatsApp registration error:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+// Update user settings
+app.post('/api/update-settings', authenticateToken, (req, res) => {
+    try {
+        const { dailyTips, emailNotifications } = req.body;
+        const userId = req.user.id;
+        
+        // Load users
+        const userData = loadUsers();
+        const user = userData.users.find(u => u.id === userId);
+        
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        
+        // Update settings
+        user.settings = {
+            dailyTips: dailyTips !== undefined ? dailyTips : user.settings.dailyTips,
+            emailNotifications: emailNotifications !== undefined ? emailNotifications : user.settings.emailNotifications
+        };
+        
+        saveUsers(userData);
+        
+        console.log(`⚙️ Settings updated for: ${user.fullName}`);
+        
+        res.json({ 
+            message: 'Settings updated successfully',
+            settings: user.settings
+        });
+        
+    } catch (error) {
+        console.error('Settings update error:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+// Get user dashboard data
+app.get('/api/dashboard', authenticateToken, (req, res) => {
+    try {
+        const userId = req.user.id;
+        
+        // Load users
+        const userData = loadUsers();
+        const user = userData.users.find(u => u.id === userId);
+        
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        
+        const userStats = userData.userStats[userId] || {};
+        
+        res.json({
+            user: {
+                fullName: user.fullName,
+                email: user.email,
+                phone: user.phone,
+                language: user.language,
+                totalMessages: user.totalMessages,
+                lastActive: user.lastActive,
+                settings: user.settings
+            },
+            stats: userStats
+        });
+        
+    } catch (error) {
+        console.error('Dashboard data error:', error);
+        res.status(500).json({ message: 'Internal server error' });
     }
 });
 

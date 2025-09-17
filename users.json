@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "id": "1758132094777",
+      "fullName": "yuvraj udaywal",
+      "email": "yuvrajudaywal@gmail.com",
+      "phone": "+919376308345",
+      "language": "en",
+      "password": "$2b$10$DfXSghDv7I4P4ktGgwGKs.Y1hxBONMhR8ay8BYdbZNgKdZM59CPXe",
+      "registeredAt": "2025-09-17T18:01:34.777Z",
+      "totalMessages": 0,
+      "lastActive": "2025-09-17T18:01:37.306Z",
+      "settings": {
+        "dailyTips": true,
+        "emailNotifications": true
+      }
+    }
+  ],
+  "registeredNumbers": [
+    "+919376308345"
+  ],
+  "userStats": {
+    "1758132094777": {
+      "whatsappRegistered": true,
+      "registeredAt": "2025-09-17T18:02:08.038Z"
+    }
+  }
+}

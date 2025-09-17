@@ -1,18 +1,31 @@
-# 🏥 WhatsApp Health Chatbot with AI
+# 🏥 WhatsApp Health Chatbot with AI & Dashboard
 
-A simple WhatsApp chatbot built with Node.js and Twilio that educates users on basic health topics and sends daily outbreak alerts. The bot supports English, Hindi, and Oriya languages, has a built-in LLM for intelligent responses, and can be easily trained by editing JSON files.
+A comprehensive WhatsApp health assistant built with Node.js that provides health education and outbreak alerts. Features a modern web dashboard for user registration, Google AI-powered responses in multiple languages, and seamless WhatsApp integration through Facebook Business API.
 
 ## 🌟 Features
 
+### 🤖 **Intelligent Health Assistant**
 - **Health Q&A**: Responds to 10+ common health questions (flu, dengue, malaria, diabetes, vaccines, etc.)
-- **Advanced Google LLM**: Uses Google's trained AI model for intelligent, accurate health responses in all languages
+- **Advanced Google LLM**: Uses Google's Gemini AI for intelligent, accurate health responses in all languages
 - **Multi-LLM Architecture**: Google LLM primary + Hugging Face LLM fallback for maximum reliability
 - **Trilingual Support**: English, Hindi, and Oriya languages with native AI responses
-- **Smart Training**: JSON knowledge base + AI learning for comprehensive health coverage
-- **Robust Response System**: Always provides helpful answers, even for complex or unusual questions
-- **Daily Alerts**: Sends health outbreak alerts at 9 AM IST daily
+
+### 🌐 **Modern Web Dashboard**
+- **User Registration**: Complete signup system with phone number validation
+- **WhatsApp Integration**: One-click link to start chatting with the health bot
+- **User Dashboard**: Personal stats, settings, and WhatsApp chat access
+- **Secure Authentication**: JWT-based login system with password hashing
+
+### 📱 **WhatsApp Integration**
 - **Facebook Business WhatsApp**: Official WhatsApp Business API (no daily limits!)
+- **Auto Registration**: Users registered through dashboard are automatically added to WhatsApp
+- **Real-time Messaging**: Instant health responses with delivery confirmations
+
+### 🔧 **Advanced Features**
+- **Smart Training**: JSON knowledge base + AI learning for comprehensive health coverage
+- **Daily Alerts**: Sends health outbreak alerts at 9 AM IST daily
 - **Production Ready**: Deployed and tested with multiple AI fallback layers
+- **Mobile Responsive**: Dashboard works perfectly on all devices
 
 ## 📋 Health Topics Covered
 
@@ -32,7 +45,8 @@ A simple WhatsApp chatbot built with Node.js and Twilio that educates users on b
 ### Prerequisites
 
 - **Node.js** (version 14 or higher) - [Download here](https://nodejs.org/)
-- **Twilio Account** - [Sign up free](https://www.twilio.com/try-twilio)
+- **Facebook Business Account** - [Setup guide](FACEBOOK_API_SETUP.md)
+- **Google AI API Key** - [Get free API key](https://ai.google.dev/gemini-api/docs/api-key)
 - **Git** (optional) - [Download here](https://git-scm.com/)
 
 ### 1. Setup Project
@@ -40,14 +54,39 @@ A simple WhatsApp chatbot built with Node.js and Twilio that educates users on b
 ```bash
 # Clone or download this project
 git clone <repository-url>
-cd whatsapp-health-chatbot
+cd sih-chatbot
 
 # Or if you downloaded the ZIP file, extract it and navigate to the folder
-cd whatsapp-health-chatbot
+cd sih-chatbot
 
 # Install dependencies
 npm install
 ```
+
+### 2. Access the Dashboard
+
+1. **Start the Server**:
+   ```bash
+   npm start
+   # Or for development:
+   node index.js
+   ```
+
+2. **Open Dashboard**:
+   - Visit: `http://localhost:3000`
+   - Or your deployed URL: `https://your-app.onrender.com`
+
+3. **Register an Account**:
+   - Click "Get Started" on the homepage
+   - Fill in your details (name, email, WhatsApp number, preferred language)
+   - Create a secure password
+   - Accept terms and conditions
+
+4. **Start WhatsApp Chat**:
+   - After registration, you'll see your dashboard
+   - Click "Start WhatsApp Chat" 
+   - This will open WhatsApp with a pre-filled message
+   - Your number is automatically registered for the health bot!
 
 ### 2. Configure Twilio
 
