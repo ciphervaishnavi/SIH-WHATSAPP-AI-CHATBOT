@@ -174,6 +174,10 @@ async function handleRegistration(e) {
         }
         
         if (response.ok) {
+            // Store registration data temporarily for later use
+            localStorage.setItem('temp_user_phone', userData.phone);
+            localStorage.setItem('temp_user_language', userData.language);
+            
             showNotification('Registration successful! Please login.', 'success');
             closeModal('registerModal');
             setTimeout(() => openLoginModal(), 1000);
@@ -223,6 +227,19 @@ async function handleLogin(e) {
         }
         
         if (response.ok) {
+            // Merge temporary registration data if available
+            const tempPhone = localStorage.getItem('temp_user_phone');
+            const tempLanguage = localStorage.getItem('temp_user_language');
+            
+            if (tempPhone || tempLanguage) {
+                result.user.phone = tempPhone;
+                result.user.language = tempLanguage;
+                
+                // Clean up temporary data
+                localStorage.removeItem('temp_user_phone');
+                localStorage.removeItem('temp_user_language');
+            }
+            
             // Store user data and token
             localStorage.setItem('healthbot_token', result.token);
             localStorage.setItem('healthbot_user', JSON.stringify(result.user));
@@ -294,6 +311,20 @@ async function startWhatsAppChat() {
     showLoading();
     
     try {
+        // Get phone number from user or prompt for it
+        let phoneNumber = currentUser.phone;
+        
+        // If no phone number stored, prompt user to enter it
+        if (!phoneNumber) {
+            phoneNumber = prompt('Please enter your WhatsApp phone number (with country code):');
+            if (!phoneNumber) {
+                showNotification('Phone number is required for WhatsApp registration', 'error');
+                return;
+            }
+        }
+        
+        console.log('📱 Registering phone number:', phoneNumber);
+        
         // Register user for WhatsApp chat
         const response = await fetch('/api/whatsapp-register', {
             method: 'POST',
@@ -302,8 +333,8 @@ async function startWhatsAppChat() {
                 'Authorization': `Bearer ${localStorage.getItem('healthbot_token')}`
             },
             body: JSON.stringify({
-                phone: currentUser.phone,
-                language: currentUser.language
+                phoneNumber: phoneNumber, // Backend expects 'phoneNumber'
+                language: currentUser.language || 'en'
             })
         });
         
@@ -320,7 +351,7 @@ async function startWhatsAppChat() {
             
             showNotification('Opening WhatsApp chat...', 'success');
         } else {
-            showNotification(result.message || 'Failed to register for WhatsApp', 'error');
+            showNotification(result.error || result.message || 'Failed to register for WhatsApp', 'error');
         }
     } catch (error) {
         console.error('WhatsApp registration error:', error);
