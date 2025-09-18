@@ -491,10 +491,10 @@ app.get('/', (req, res) => {
 // User registration endpoint
 app.post('/api/register', async (req, res) => {
     try {
-        const { fullName, email, phone, language, password, terms } = req.body;
+        const { name, email, phone, language, password, terms } = req.body;
         
         // Validate required fields
-        if (!fullName || !email || !phone || !language || !password) {
+        if (!name || !email || !phone || !language || !password) {
             return res.status(400).json({ message: 'All fields are required' });
         }
         
@@ -531,7 +531,7 @@ app.post('/api/register', async (req, res) => {
         // Create new user
         const newUser = {
             id: Date.now().toString(),
-            fullName,
+            name,
             email,
             phone,
             language,
@@ -554,13 +554,13 @@ app.post('/api/register', async (req, res) => {
             return res.status(500).json({ message: 'Failed to save user data' });
         }
         
-        console.log(`👤 New user registered: ${fullName} (${email})`);
+        console.log(`👤 New user registered: ${name} (${email})`);
         
         res.status(201).json({ 
             message: 'Registration successful',
             user: {
                 id: newUser.id,
-                fullName: newUser.fullName,
+                name: newUser.name,
                 email: newUser.email,
                 phone: newUser.phone,
                 language: newUser.language
@@ -610,14 +610,14 @@ app.post('/api/login', async (req, res) => {
             { expiresIn: tokenExpiry }
         );
         
-        console.log(`🔑 User logged in: ${user.fullName} (${user.email})`);
+        console.log(`🔑 User logged in: ${user.name} (${user.email})`);
         
         res.json({
             message: 'Login successful',
             token,
             user: {
                 id: user.id,
-                fullName: user.fullName,
+                name: user.name,
                 email: user.email,
                 phone: user.phone,
                 language: user.language,
@@ -636,8 +636,12 @@ app.post('/api/login', async (req, res) => {
 // Register for WhatsApp chat
 app.post('/api/register-whatsapp', authenticateToken, (req, res) => {
     try {
-        const { phone, language } = req.body;
+        const { phoneNumber } = req.body;
         const userId = req.user.id;
+        
+        if (!phoneNumber) {
+            return res.status(400).json({ message: 'Phone number is required' });
+        }
         
         // Load users
         const userData = loadUsers();
@@ -648,12 +652,12 @@ app.post('/api/register-whatsapp', authenticateToken, (req, res) => {
         }
         
         // Add to registered numbers if not already present
-        if (!userData.registeredNumbers.includes(phone)) {
-            userData.registeredNumbers.push(phone);
+        if (!userData.registeredNumbers.includes(phoneNumber)) {
+            userData.registeredNumbers.push(phoneNumber);
         }
         
         // Add to alert contacts
-        userContacts.add(phone);
+        userContacts.add(phoneNumber);
         
         // Update user stats
         if (!userData.userStats[userId]) {
@@ -665,7 +669,7 @@ app.post('/api/register-whatsapp', authenticateToken, (req, res) => {
         
         saveUsers(userData);
         
-        console.log(`📱 WhatsApp registration: ${user.fullName} (${phone})`);
+        console.log(`📱 WhatsApp registration: ${user.name} (${phoneNumber})`);
         
         res.json({ 
             message: 'Successfully registered for WhatsApp chat',

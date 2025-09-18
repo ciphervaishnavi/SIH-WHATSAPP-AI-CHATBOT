@@ -14,15 +14,67 @@
         "dailyTips": true,
         "emailNotifications": true
       }
+    },
+    {
+      "id": "1758192355818",
+      "fullName": "laskdfj",
+      "email": "lkddj@gmail.com",
+      "phone": "+912323232323",
+      "language": "hi",
+      "password": "$2b$10$Tm0t3koapOKD8yR1WtbeRu/.e4Hi2/14qtpmy95HY44Kdn.xfxUVe",
+      "registeredAt": "2025-09-18T10:45:55.818Z",
+      "totalMessages": 0,
+      "lastActive": "2025-09-18T10:46:03.575Z",
+      "settings": {
+        "dailyTips": true,
+        "emailNotifications": true
+      }
+    },
+    {
+      "id": "1758220702636",
+      "name": "test user",
+      "email": "test111@gmail.com",
+      "phone": "+919999999999",
+      "language": "en",
+      "password": "$2b$10$UMnA0JppqvO.FvLp.PJl5utjlYbn6fN2UHbPd38ZpRqm4rT3UcMJS",
+      "registeredAt": "2025-09-18T18:38:22.636Z",
+      "totalMessages": 0,
+      "lastActive": null,
+      "settings": {
+        "dailyTips": true,
+        "emailNotifications": true
+      }
+    },
+    {
+      "id": "1758220814401",
+      "name": "test user",
+      "email": "test2020@gmail.com",
+      "phone": "+915555555555",
+      "language": "en",
+      "password": "$2b$10$5A/k23WXNodvKtcnhoQq.eDXJAaBbv4GceIWMgdEBGuVTMN0NjHH2",
+      "registeredAt": "2025-09-18T18:40:14.401Z",
+      "totalMessages": 0,
+      "lastActive": "2025-09-18T18:40:18.529Z",
+      "settings": {
+        "dailyTips": true,
+        "emailNotifications": true
+      }
     }
   ],
   "registeredNumbers": [
-    "+919376308345"
+    "+919376308345",
+    "+912323232323",
+    "+919999999999",
+    "+915555555555"
   ],
   "userStats": {
     "1758132094777": {
       "whatsappRegistered": true,
       "registeredAt": "2025-09-17T18:02:08.038Z"
+    },
+    "1758220814401": {
+      "whatsappRegistered": true,
+      "registeredAt": "2025-09-18T18:41:25.787Z"
     }
   }
 }

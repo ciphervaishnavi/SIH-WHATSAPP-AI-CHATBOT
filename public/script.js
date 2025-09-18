@@ -1,6 +1,7 @@
 // Global variables
 let currentUser = null;
-const API_BASE = ''; // Use relative path for Netlify functions
+// Auto-detect API base URL - use localhost:3000 for local development, relative path for Netlify
+const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : '';
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
@@ -146,17 +147,20 @@ async function handleRegistration(e) {
     
     showLoading();
     
-    // Only send fields that the backend expects
+    // Send all required fields to the backend
     const registrationData = {
         name: userData.name,
         email: userData.email,
-        password: userData.password
+        phone: userData.phone,
+        language: userData.language,
+        password: userData.password,
+        terms: userData.terms
     };
     
     console.log('📤 Sending registration data:', registrationData);
     
     try {
-        const response = await fetch('/api/register', {
+        const response = await fetch(`${API_BASE}/api/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -174,10 +178,6 @@ async function handleRegistration(e) {
         }
         
         if (response.ok) {
-            // Store registration data temporarily for later use
-            localStorage.setItem('temp_user_phone', userData.phone);
-            localStorage.setItem('temp_user_language', userData.language);
-            
             showNotification('Registration successful! Please login.', 'success');
             closeModal('registerModal');
             setTimeout(() => openLoginModal(), 1000);
@@ -209,7 +209,7 @@ async function handleLogin(e) {
     showLoading();
     
     try {
-        const response = await fetch('/api/login', {
+        const response = await fetch(`${API_BASE}/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -326,7 +326,7 @@ async function startWhatsAppChat() {
         console.log('📱 Registering phone number:', phoneNumber);
         
         // Register user for WhatsApp chat
-        const response = await fetch('/api/whatsapp-register', {
+        const response = await fetch(`${API_BASE}/api/register-whatsapp`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
