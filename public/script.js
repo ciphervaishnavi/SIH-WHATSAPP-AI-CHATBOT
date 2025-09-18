@@ -1,6 +1,6 @@
 // Global variables
 let currentUser = null;
-const API_BASE = window.location.origin;
+const API_BASE = '/api'; // Use relative path for Netlify functions
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {

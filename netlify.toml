@@ -1,0 +1,43 @@
+[build]
+  # Build command
+  command = "npm run build"
+  
+  # Directory to publish (static files)
+  publish = "public"
+  
+  # Functions directory
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Redirect all API calls to functions
+[[redirects]]
+  from = "/api/webhook"
+  to = "/.netlify/functions/webhook"
+  status = 200
+
+[[redirects]]
+  from = "/api/register"
+  to = "/.netlify/functions/register"
+  status = 200
+
+[[redirects]]
+  from = "/api/login"
+  to = "/.netlify/functions/login"
+  status = 200
+
+[[redirects]]
+  from = "/api/whatsapp-register"
+  to = "/.netlify/functions/whatsapp-register"
+  status = 200
+
+# Serve static files (dashboard)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[functions]
+  # Set function timeout (max 10 seconds for free tier)
+  timeout = 10
