@@ -1,18 +1,15 @@
 // Netlify Function for WhatsApp Registration
 const jwt = require('jsonwebtoken');
-const fs = require('fs');
-const path = require('path');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'healthbot-super-secret-key-2025-sih-project';
-const usersFilePath = path.join(__dirname, '../../users.json');
+
+// Simple in-memory user store (in production, use a database)
+let users = [];
 
 // Load users
 function loadUsers() {
     try {
-        if (fs.existsSync(usersFilePath)) {
-            const data = fs.readFileSync(usersFilePath, 'utf8');
-            return JSON.parse(data);
-        }
+        return users;
     } catch (error) {
         console.error('Error loading users:', error.message);
     }
@@ -20,9 +17,9 @@ function loadUsers() {
 }
 
 // Save users
-function saveUsers(users) {
+function saveUsers(newUsers) {
     try {
-        fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2));
+        users = newUsers;
         return true;
     } catch (error) {
         console.error('Error saving users:', error.message);

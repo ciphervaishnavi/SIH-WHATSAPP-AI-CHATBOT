@@ -5,25 +5,26 @@ const fs = require('fs');
 const path = require('path');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'healthbot-super-secret-key-2025-sih-project';
-const usersFilePath = path.join(__dirname, '../../users.json');
 
-// Load users
+// For Netlify functions, we need to handle file storage differently
+let users = [];
+
+// Load users from environment or use empty array
 function loadUsers() {
     try {
-        if (fs.existsSync(usersFilePath)) {
-            const data = fs.readFileSync(usersFilePath, 'utf8');
-            return JSON.parse(data);
-        }
+        // In production, you might want to use a database
+        // For now, we'll use a simple in-memory store
+        return users;
     } catch (error) {
         console.error('Error loading users:', error.message);
     }
     return [];
 }
 
-// Save users
-function saveUsers(users) {
+// Save users (in production, use a database)
+function saveUsers(newUsers) {
     try {
-        fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2));
+        users = newUsers;
         return true;
     } catch (error) {
         console.error('Error saving users:', error.message);
