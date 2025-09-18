@@ -122,13 +122,15 @@ async function handleRegistration(e) {
     
     const formData = new FormData(e.target);
     const userData = {
-        fullName: formData.get('fullName'),
+        name: formData.get('fullName'), // Backend expects 'name', form sends 'fullName'
         email: formData.get('email'),
         phone: formData.get('countryCode') + formData.get('phone'),
         language: formData.get('language'),
         password: formData.get('password'),
         terms: formData.get('terms')
     };
+    
+    console.log('📋 Registration data:', userData);
     
     // Validate phone number
     if (!isValidPhoneNumber(userData.phone)) {
@@ -144,13 +146,22 @@ async function handleRegistration(e) {
     
     showLoading();
     
+    // Only send fields that the backend expects
+    const registrationData = {
+        name: userData.name,
+        email: userData.email,
+        password: userData.password
+    };
+    
+    console.log('📤 Sending registration data:', registrationData);
+    
     try {
         const response = await fetch('/api/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(userData)
+            body: JSON.stringify(registrationData)
         });
         
         let result;
