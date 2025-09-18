@@ -39,5 +39,5 @@
   status = 200
 
 [functions]
-  # Set function timeout (max 10 seconds for free tier)
-  timeout = 10
+  # Function configuration for Netlify
+  node_bundler = "esbuild"
