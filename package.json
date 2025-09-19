@@ -6,10 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node index.js",
-    "test": "node index.js",
-    "train": "node train.js",
-    "build": "echo 'Building for Netlify...' && mkdir -p dist && cp -r public/* dist/ 2>/dev/null || xcopy public\\* dist\\ /E /I /Q",
-    "postbuild": "echo 'Build completed successfully'"
+    "vercel-build": "echo 'Build complete'"
   },
   "keywords": [
     "whatsapp",
@@ -35,6 +32,6 @@
     "node-schedule": "^2.1.1"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": "18.x"
   }
 }
