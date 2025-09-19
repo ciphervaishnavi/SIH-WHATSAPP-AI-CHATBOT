@@ -28,25 +28,11 @@
       "dest": "/index.js"
     },
     {
-      "src": "/style.css",
-      "dest": "/public/style.css",
-      "headers": {
-        "Content-Type": "text/css"
-      }
-    },
-    {
-      "src": "/script.js", 
-      "dest": "/public/script.js",
-      "headers": {
-        "Content-Type": "application/javascript"
-      }
-    },
-    {
       "src": "/",
       "dest": "/public/index.html"
     },
     {
-      "src": "/(.*\\.(css|js|html|png|jpg|ico|svg))",
+      "src": "/(.*)",
       "dest": "/public/$1"
     }
   ],
@@ -54,25 +40,5 @@
     "index.js": {
       "maxDuration": 30
     }
-  },
-  "headers": [
-    {
-      "source": "/(.*\\.css)",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/css"
-        }
-      ]
-    },
-    {
-      "source": "/(.*\\.js)",
-      "headers": [
-        {
-          "key": "Content-Type", 
-          "value": "application/javascript"
-        }
-      ]
-    }
-  ]
+  }
 }
