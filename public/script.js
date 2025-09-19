@@ -364,9 +364,9 @@ async function startWhatsAppChat() {
 // Get welcome message in user's language
 function getWelcomeMessage(language) {
     const messages = {
-        'en': 'Hello! I would like to start using the HealthBot AI service.',
-        'hi': 'नमस्ते! मैं HealthBot AI सेवा का उपयोग करना चाहूंगा।',
-        'or': 'ନମସ୍କାର! ମୁଁ HealthBot AI ସେବା ବ୍ୟବହାର କରିବାକୁ ଚାହେଁ।'
+        'en': 'Hello! I would like to start using the Arogyam AI service.',
+        'hi': 'नमस्ते! मैं Arogyam AI सेवा का उपयोग करना चाहूंगा।',
+        'or': 'ନମସ୍କାର! ମୁଁ Arogyam AI ସେବା ବ୍ୟବହାର କରିବାକୁ ଚାହେଁ।'
     };
     return messages[language] || messages['en'];
 }

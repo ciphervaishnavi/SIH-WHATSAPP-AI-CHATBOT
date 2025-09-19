@@ -1,4 +1,4 @@
-# 🎯 HealthBot AI Dashboard - Complete Demo Guide
+# 🎯 Arogyam AI Dashboard - Complete Demo Guide
 
 ## 🌟 Overview
 
@@ -139,7 +139,7 @@ You now have a **complete WhatsApp Health Assistant** with a modern web dashboar
 
 ## 🎯 Next Steps
 
-Your HealthBot AI is now **complete and production-ready**! Users can:
+Your Arogyam AI is now **complete and production-ready**! Users can:
 1. **Register** through the beautiful dashboard
 2. **Access WhatsApp** with one click
 3. **Get health advice** in their preferred language
