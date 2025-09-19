@@ -4,20 +4,75 @@
     {
       "src": "index.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "public/**/*",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/api/(.*)",
       "dest": "/index.js"
+    },
+    {
+      "src": "/webhook",
+      "dest": "/index.js"
+    },
+    {
+      "src": "/health",
+      "dest": "/index.js"
+    },
+    {
+      "src": "/debug-env",
+      "dest": "/index.js"
+    },
+    {
+      "src": "/style.css",
+      "dest": "/public/style.css",
+      "headers": {
+        "Content-Type": "text/css"
+      }
+    },
+    {
+      "src": "/script.js", 
+      "dest": "/public/script.js",
+      "headers": {
+        "Content-Type": "application/javascript"
+      }
+    },
+    {
+      "src": "/",
+      "dest": "/public/index.html"
+    },
+    {
+      "src": "/(.*\\.(css|js|html|png|jpg|ico|svg))",
+      "dest": "/public/$1"
     }
   ],
-  "env": {
-    "FACEBOOK_ACCESS_TOKEN": "EAAq9OnlMTU0BPTS4MiTBqwQxqEh0Wx9ZC2DdZBOkzqTkwmTmwrAJUm5AYmZAQAU4Oy7xi4fUW8YAQVgVV2plI6ZC7N72m3yu3Y4jMtIAWOCDNiYbt5QFV27d84hgoMRPl8RISkZB8EVOUSurZCcJZAMjk4PzbQYGsdaRl2ZCIshYmeJZB4Ep90ltxQcSO2QA2VlOHaHUxu5yaM1Ypk1RUeypMmDE1WjwfaBLMeuZBbXJZA6mFi6ZBDwG",
-    "FACEBOOK_PHONE_NUMBER_ID": "770231682842300",
-    "FACEBOOK_VERIFY_TOKEN": "vaivaivai123123",
-    "FACEBOOK_APP_SECRET": "abcqwe123",
-    "GOOGLE_LLM_API_KEY": "AIzaSyDsUQ-65SYczfUKbY1_sZ1qpZ1_v14JkUU",
-    "HUGGINGFACE_API_KEY": "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"
-  }
+  "functions": {
+    "index.js": {
+      "maxDuration": 30
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*\\.css)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/css"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.js)",
+      "headers": [
+        {
+          "key": "Content-Type", 
+          "value": "application/javascript"
+        }
+      ]
+    }
+  ]
 }
