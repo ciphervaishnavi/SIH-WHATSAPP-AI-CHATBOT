@@ -13,7 +13,7 @@
 
 ### ✨ **Key Features**
 
-- 🤖 **Custom AI Model**: Fine-tuned DistilGPT2 specialized for health queries
+- 🤖 **Custom AI Model**: Fine-tuned DistilBERT2 specialized for health queries
 - 📱 **WhatsApp Integration**: Native Facebook Business WhatsApp API
 - 🌍 **Multi-language Support**: English, Hindi, and Oriya
 - 📊 **Admin Dashboard**: Real-time analytics and user management
